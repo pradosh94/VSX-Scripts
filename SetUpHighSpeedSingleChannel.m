@@ -1,4 +1,4 @@
-% SetUpHighSpeedSingleChannel.m - Ultra-fast single channel Doppler acquisition
+% SetUpHighSpeedSingleChannel.m - Ultra-fast single channel data acquisition
 % Optimized for maximum PRF with minimal data transfer and processing
 
 clear all
@@ -51,12 +51,12 @@ Resource.RcvBuffer(1).colsPerFrame = Resource.Parameters.numRcvChannels;
 Resource.RcvBuffer(1).numFrames = 1000;     % Large buffer for continuous acquisition
 
 % === SPEED OPTIMIZATION #6: No InterBuffer needed ===
-% Skip IQ processing for maximum speed in basic Doppler
-Resource.InterBuffer(1).numFrames = 10;     % Small buffer for Doppler processing
+% Skip IQ processing for maximum speed in basic data
+Resource.InterBuffer(1).numFrames = 10;     % Small buffer for data processing
 Resource.ImageBuffer(1).numFrames = 1;      % Single frame for display
 
 % Minimal display window
-Resource.DisplayWindow(1).Title = 'High Speed Single Channel Doppler';
+Resource.DisplayWindow(1).Title = 'High Speed Single Channel data';
 Resource.DisplayWindow(1).pdelta = 0.5;
 ScrnSize = get(0,'ScreenSize');
 Resource.DisplayWindow(1).Position = [250,(ScrnSize(4)-300)/2, 300, 300];
@@ -87,7 +87,7 @@ TGC.Waveform = computeTGCWaveform(TGC);
 
 %% Specify Receive structures
 % === SPEED OPTIMIZATION #9: Minimal receive aperture ===
-% === SPEED OPTIMIZATION #10: Narrow bandwidth for Doppler ===
+% === SPEED OPTIMIZATION #10: Narrow bandwidth for data ===
 numAcqs = Resource.RcvBuffer(1).numFrames;
 Receive = repmat(struct('Apod', zeros(1,Trans.numelements), ...
                        'startDepth', P.startDepth, ...
@@ -96,7 +96,7 @@ Receive = repmat(struct('Apod', zeros(1,Trans.numelements), ...
                        'bufnum', 1, ...
                        'framenum', 1, ...
                        'acqNum', 1, ...
-                       'sampleMode', 'BS50BW', ... % Narrow bandwidth for Doppler
+                       'sampleMode', 'BS50BW', ... % Narrow bandwidth for data
                        'mode', 0, ...
                        'callMediaFunc', 1), 1, numAcqs);
 
@@ -119,7 +119,7 @@ ReconInfo = struct('mode', 'replaceIntensity', ...
                    'rcvnum', 1, ...
                    'regionnum', 1);
 
-%% Specify Process structure for Doppler
+%% Specify Process structure for data
 Process(1).classname = 'Image';
 Process(1).method = 'imageDisplay';
 Process(1).Parameters = {'imgbufnum',1,...
